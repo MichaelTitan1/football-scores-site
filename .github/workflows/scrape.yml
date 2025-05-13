@@ -1,4 +1,4 @@
-name: Scrape Upcoming Matches
+name: Scrape upcoming Matches
 
 on:
   workflow_dispatch:
