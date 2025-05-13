@@ -23,4 +23,3 @@ jobs:
 
       - name: Run scraper
         run: python scraper.py
-GitHub Action to run scraper hourly
