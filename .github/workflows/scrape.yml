@@ -1,35 +1,31 @@
-name: Auto Scraper
+name: Scrape Upcoming Matches
 
 on:
-  schedule:
-    - cron: '0 * * * *'  # every hour
   workflow_dispatch:
+  schedule:
+    - cron: '0 */1 * * *'  # Runs every hour
 
 jobs:
-  run-scraper:
+  scrape-and-upload:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
-      - name: Install dependencies
-        run: pip install requests
+    - name: Install dependencies
+      run: pip install requests
 
-      - name: Run scraper
-        run: python scraper.py
+    - name: Run scraper script
+      run: python upcoming_scraper.py
 
-      - name: Upload to PythonAnywhere
-        env:
-          USERNAME: ${{ secrets.PA_USERNAME }}
-          API_TOKEN: ${{ secrets.PA_API_TOKEN }}
-          TARGET_PATH: ${{ secrets.PA_TARGET_PATH }}
-        run: |
-          curl -X POST "https://www.pythonanywhere.com/api/v0/user/$USERNAME/files/path$TARGET_PATH" \
-            -H "Authorization: Token $API_TOKEN" \
-            --data-binary @upcoming_matches.json
+    - name: Upload to PythonAnywhere
+      run: |
+        curl -X POST "https://www.pythonanywhere.com/api/v0/user/Michael1/files/path/home/Michael1/predictsite/upcoming_matches.json" \
+          --header "Authorization: Token ${{ secrets.PYTHONANYWHERE_TOKEN }}" \
+          --data-binary "@upcoming_matches.json"
